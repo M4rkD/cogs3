@@ -72,6 +72,7 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.email
 
+    institution = None
 
 class ShibbolethProfile(Profile):
     shibboleth_id = models.CharField(
