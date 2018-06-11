@@ -2,6 +2,8 @@ import datetime
 
 from django.contrib.auth.models import Group
 from django.test import TestCase
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 from institution.tests.test_models import InstitutionTests
 from project.models import Project
@@ -94,6 +96,14 @@ class ProjectModelTests(TestCase):
         self.project_owner = CustomUserTests.create_custom_user(
             email=project_owner_email,
             group=group,
+        )
+
+        # Create an external user who can't access project
+        external_email = 'my.email@external.com'
+        self.external_user = CustomUserTests.create_custom_user(
+            email=external_email,
+            group=group,
+            is_shibboleth_login_required=False
         )
 
         # Create a project applicant.
