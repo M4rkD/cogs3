@@ -17,6 +17,7 @@ from shibboleth.middleware import ShibbolethValidationError
 class SCWRemoteUserMiddleware(ShibbolethRemoteUserMiddleware):
 
     def process_request(self, request):
+
         # The identity of external collaborators is managed within the django application.
         # Therefore, exclude the external collaborator login form from the SCW Remote User
         # Middleware.

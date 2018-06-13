@@ -2,6 +2,8 @@ import time
 
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.select import Select
+from project.models import Institution
+from users.models import Profile, ShibbolethProfile
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse
@@ -11,7 +13,6 @@ from cogs3.settings import LANGUAGE_CODE
 from cogs3.settings import SELENIUM_WEBDRIVER
 from cogs3.settings import SELENIUM_WEBDRIVER_PROFILE
 from users.models import CustomUser
-
 
 class SeleniumTestsBase(StaticLiveServerTestCase):
     fixtures = [
@@ -46,7 +47,18 @@ class SeleniumTestsBase(StaticLiveServerTestCase):
         """
         Sign in as a preexisting test user
         """
-        # Sign in using the external collaborators login form
+
+        if user.profile.institution is None:
+            self.sign_in_as_external()
+        else:
+            self.sign_in_as_internal()
+
+    def sign_in_as_internal(self):
+        """ Sign in using the shibboleth mock middleware """
+        self.selenium.get(self.live_server_url + url)
+
+    def sign_in_as_external(self):
+        """ Sign in using the external collaborators login form """
         self.get_url(reverse('external-login'))
 
         form_fields = {
@@ -87,6 +99,7 @@ class SeleniumTestsBase(StaticLiveServerTestCase):
         self.selenium.quit()
 
     def setUp(self):
+
         self.user_password = "password"
         self.user = CustomUser(
             username="user@swansea.ac.uk",
@@ -94,7 +107,7 @@ class SeleniumTestsBase(StaticLiveServerTestCase):
             first_name='User',
             last_name='User',
             is_staff=True,
-            is_shibboleth_login_required=False,
+            is_shibboleth_login_required=True,
         )
         self.create_test_user(self.user)
 
@@ -112,7 +125,7 @@ class SeleniumTestsBase(StaticLiveServerTestCase):
             email="123456@swansea.ac.uk",
             first_name='Student',
             last_name='Student',
-            is_shibboleth_login_required=False,
+            is_shibboleth_login_required=True,
         )
         self.create_test_user(self.student)
 
@@ -123,7 +136,7 @@ class SeleniumTestsBase(StaticLiveServerTestCase):
             last_name='Rse',
             is_staff=True,
             is_superuser=True,
-            is_shibboleth_login_required=False,
+            is_shibboleth_login_required=True,
         )
         self.create_test_user(self.rse)
 
@@ -134,7 +147,7 @@ class SeleniumTestsBase(StaticLiveServerTestCase):
             last_name='Admin',
             is_staff=True,
             is_superuser=True,
-            is_shibboleth_login_required=False,
+            is_shibboleth_login_required=True,
         )
         self.create_test_user(self.admin)
 

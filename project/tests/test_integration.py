@@ -35,7 +35,7 @@ class ProjectIntegrationTests(SeleniumTestsBase):
         'id_document': test_file,
     }
 
-    def test_create_project(self):
+    def test_create_project_missing_fields(self):
         """
         Create a new project
         """
@@ -57,6 +57,9 @@ class ProjectIntegrationTests(SeleniumTestsBase):
             self.select_from_dropdown_by_id('id_funding_source', 1)
             self.submit_form(self.default_project_form_fields)
             assert "This field is required." in self.selenium.page_source
+
+    def test_create_project(self):
+        self.sign_in(self.user)
 
         self.get_url('')
         self.click_link_by_url(reverse('create-project'))
@@ -171,8 +174,7 @@ class ProjectIntegrationTests(SeleniumTestsBase):
 
         self.submit_form(self.default_project_form_fields)
 
-        assert "This field is required." not in self.selenium.page_source
-        assert "Successfully submitted a project application." in self.selenium.page_source
+        assert "only users which belong to an institution can create projects" in self.selenium.page_source
 
     def test_create_project_unauthorized(self):
         """
