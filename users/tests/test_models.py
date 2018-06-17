@@ -118,6 +118,7 @@ class CustomUserTests(TestCase):
         self.assertEqual(profile.scopus, '')
         self.assertEqual(profile.homepage, '')
         self.assertEqual(profile.cronfa, '')
+        self.assertTrue(user.has_perm('project.add_projects'))
 
     def test_non_shibboleth_user_creation(self):
         """
@@ -141,3 +142,4 @@ class CustomUserTests(TestCase):
         self.assertEqual(profile.description, '')
         self.assertEqual(profile.phone, '')
         self.assertEqual(profile.account_status, Profile.AWAITING_APPROVAL)
+        self.assertFalse(user.has_perm('project.add_projects'))

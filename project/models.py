@@ -201,6 +201,9 @@ class Project(models.Model):
 
     class Meta:
         verbose_name_plural = _('Projects')
+        permissions = (
+            ('create_projects', 'Can create new projects'),
+        )
 
 
 class ProjectSystemAllocation(models.Model):
