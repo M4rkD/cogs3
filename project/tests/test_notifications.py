@@ -82,7 +82,7 @@ class ProjectNotificationTests(TestCase):
                 'Wrong recipient: {}'.format(mail.outbox[0].to)
 
     def test_project_membership_created(self):
-        membership = ProjectUserMembership.objects.get(pk=1)
+        membership = ProjectUserMembership.objects.first()
         previous_email = len(mail.outbox)
         notifications.project_membership_created(self.membership)
         assert len(mail.outbox) - previous_email > 0, "An email must be sent"
